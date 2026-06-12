@@ -33,7 +33,7 @@ curl -L -O "https://github.com/kuzmak161-creator/doom-ascii/raw/master/doom_asci
 **3. Run the installer and start the game**
 ```sh
 chmod +x install.sh && ./install.sh
-cd doom/game
+cd doom/game && chmod +x doom-ascii
 ./doom-ascii -iwad DOOM1.WAD
 ```
 
