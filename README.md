@@ -34,6 +34,8 @@ curl -L -O "https://github.com/kuzmak161-creator/doom-ascii/raw/master/doom_asci
 ```sh
 chmod +x install.sh && ./install.sh
 cd doom/game && chmod +x doom-ascii
+```
+```sh
 ./doom-ascii -iwad DOOM1.WAD
 ```
 
