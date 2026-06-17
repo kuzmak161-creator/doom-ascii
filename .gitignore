@@ -1,4 +1,3 @@
-*.WAD
 .cache/
 _*/
 build/
