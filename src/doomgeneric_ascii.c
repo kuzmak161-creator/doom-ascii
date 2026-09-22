@@ -1,5 +1,5 @@
 //
-// Copyright(C) 2022-2025 Wojciech Graj
+// Copyright(C) 2022-2026 Wojciech Graj
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -17,6 +17,7 @@
 
 #include "doomgeneric.h"
 #include "doomkeys.h"
+#include "doomtype.h"
 #include "i_system.h"
 #include "m_argv.h"
 
@@ -77,7 +78,7 @@ static int clock_gettime(const int p, struct timespec *const spec)
 }
 
 #else
-#define CLK CLOCK_REALTIME
+#define CLK CLOCK_REALTIME /* NOLINT(misc-include-cleaner) */
 #define dg_random random
 #endif
 
@@ -198,6 +199,7 @@ void DG_AtExit(void)
 {
 	if (color_enabled || bold_enabled)
 		(void)fputs("\033[0m", stdout);
+	(void)fputs("\033[?25h\n", stdout);
 
 #ifdef OS_WINDOWS
 	DWORD mode;
@@ -240,6 +242,8 @@ void DG_Init(void)
 	CALL(tcsetattr(STDIN_FILENO, TCSANOW, &t), "DG_Init: tcsetattr error %d");
 #endif
 	CALL(atexit(&DG_AtExit), "DG_Init: atexit error %d");
+
+	CALL_STDOUT(fputs("\033[?25l", stdout), "DG_Init: fputs error %d");
 
 	color_enabled = M_CheckParm("-nocolor") == 0;
 	gradient_enabled = M_CheckParm("-nograd") == 0;
@@ -389,7 +393,8 @@ void DG_DrawFrame(void)
 
 			pixel++;
 		}
-		BUF_PUTCHAR(buf, '\n');
+		if (row + 1 < DOOMGENERIC_RESY)
+			BUF_PUTCHAR(buf, '\n');
 	}
 	if (color_enabled || bold_enabled)
 		BUF_PUTS(buf, "\033[0m");
